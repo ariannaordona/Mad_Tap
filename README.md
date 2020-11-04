@@ -30,7 +30,9 @@ RULES
 
 ====================================
 
-DATABASE (WIP to connect app to database, current all hard coded)
+DATABASE (WIP to connect app to database, currently all hard coded)
+- Database needs work, specifically images. Otherwise, code is easy to generate from existing excel and queries are basic
+- Database will be MySQL (because I am familiar with it)
 
 CHARACTERS
 Name
