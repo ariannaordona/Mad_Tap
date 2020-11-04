@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Mad Tap</string>
+    <string name="mad_tap">Mad Tap</string>
+    <string name="start">Start</string>
+    <string name="zhuyin">Zhuyin</string>
+    <string name="traditional">Traditional</string>
+    <string name="pinyin">Pinyin</string>
+    <string name="time_15">TIME: 15</string>
+    <string name="score_0">SCORE: 0</string>
+    <string name="best_0">BEST: 0</string>
+</resources>
