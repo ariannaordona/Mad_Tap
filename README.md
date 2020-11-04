@@ -50,14 +50,14 @@ INTERFACE
 - Radio button > Audio
 - Button > Start
 
-=== Randomize words in category ====
-- Continually show words (keep looping/repeating words)
-- Many symbols/images on the bottom of screen (near thumb)
- - Player taps symbols/images to give answer -> what the above word matches to image
-- If player gets it wrong============
+=== Randomize images in category ====
+- Continually show images (keep looping/repeating words)
+- Stack of images in the middle of the screen
+ - Player taps 3x3 set of buttons filled with the characters that create the words that represent the images
+- If player gets it wrong
  - screen pops a big X on screen
  - pauses the game for 1 second
-- If player gets it right===========
+- If player gets it right
  - images go down
  - screen pops large image of correct symbol onto screen 
  - Score updates
