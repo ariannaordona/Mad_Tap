@@ -3,9 +3,13 @@
     <string name="mad_tap">Mad Tap</string>
     <string name="start">Start</string>
     <string name="zhuyin">Zhuyin</string>
-    <string name="traditional">Traditional</string>
     <string name="pinyin">Pinyin</string>
+    <string name="traditional">Traditional</string>
     <string name="time_15">TIME: 15</string>
     <string name="score_0">SCORE: 0</string>
     <string name="best_0">BEST: 0</string>
+    <string name="quit">Quit</string>
+    <string name="restart">Restart</string>
+    <string name="show_answers">Show Answers</string>
+    <string name="practice_mode">Practice Mode</string>
 </resources>

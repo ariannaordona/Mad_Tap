@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mi_restart"
+        android:title="@string/restart" />
+    <item
+        android:id="@+id/si_zhuyin"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/zhuyin"
+        app:actionLayout="@layout/switch_item" />
+    <item
+        android:id="@+id/si_pinyin"
+        android:checkable="true"
+        android:checked="false"
+        android:title="@string/pinyin"
+        app:actionLayout="@layout/switch_item" />
+    <item
+        android:id="@+id/si_answers"
+        android:checkable="true"
+        android:checked="true"
+        android:enabled="true"
+        android:title="@string/show_answers"
+        app:actionLayout="@layout/switch_item" />
+    <item
+        android:id="@+id/mi_practice"
+        android:enabled="true"
+        android:title="@string/practice_mode" />
+    <item
+        android:id="@+id/mi_quit"
+        android:enabled="true"
+        android:title="@string/quit" />
+</menu>

@@ -5,6 +5,7 @@ import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -56,6 +57,12 @@ class MainActivity : AppCompatActivity() {
 
         setListeners()
         setButtonText()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.game_options_menu, menu)
+        return true
     }
 
     private fun correctAnswer() {
