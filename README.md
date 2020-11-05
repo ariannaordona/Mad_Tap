@@ -2,6 +2,8 @@
 
 This is a personal project made to increase my set of vocabulary for learning Mandarin. 
 
+![app explanation image](game_interface_explanation.jpg)
+
 MANDARIN MATCH (WIP)
 
 ====================================
