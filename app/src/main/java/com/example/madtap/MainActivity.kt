@@ -1,6 +1,9 @@
 package com.example.madtap
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,11 +12,14 @@ import android.view.Menu
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.bottom_bar.*
 import kotlinx.android.synthetic.main.grid.*
 import kotlinx.android.synthetic.main.middle_bar.*
+import kotlinx.android.synthetic.main.top_bar.*
 import java.util.*
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
@@ -35,10 +41,14 @@ class MainActivity : AppCompatActivity() {
     var answerObject = vocabWord[r.nextInt(vocabWord.size)]
     var answer = answerObject.name
     var answerArray = ArrayList<Word>()
+    var currentScore = 0
+    var bestScore = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
+        bestScore = sharedPref.getInt("bestScore", 0)
 
         //Populate answer array with random words then set images based on array list
         answerArray.add(answerObject)
@@ -55,8 +65,11 @@ class MainActivity : AppCompatActivity() {
         tv_answerNumber.text = answer.length.toString()
         tv_answerHint.text = makeVertical(answerObject.name)
 
+        tv_time.text = ("TIME: " + MILLISECONDS.toSeconds(15000))
+
         setListeners()
         setButtonText()
+        startTimer()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,6 +78,12 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    private fun initGame() {
+        //TODO initialize the game, currently the game only starts onCreate
+        // if the player wants to play again, this must be implemented
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun correctAnswer() {
         imageAnimation()
         tv_answer.text = ""
@@ -80,6 +99,9 @@ class MainActivity : AppCompatActivity() {
         iv_2.setImageResource(answerArray[1].img)
         iv_3.setImageResource(answerArray[2].img)
         iv_4.setImageResource(answerArray[3].img)
+
+        currentScore++
+        tv_score.text = "SCORE: $currentScore"
 
         //TODO add a green highlight flash to show user that it is correct or play a sound
 
@@ -191,4 +213,41 @@ class MainActivity : AppCompatActivity() {
         b_7.text = v[buttons[6]].toString()
         b_8.text = v[buttons[7]].toString()
     }
+
+    private fun startTimer() {
+        var timer = object : CountDownTimer(50000, 1000) {
+            @SuppressLint("SetTextI18n")
+            override fun onTick(milliUntilFinished: Long) {
+                tv_time.text = "TIME: ${MILLISECONDS.toSeconds(milliUntilFinished)}"
+            }
+            @SuppressLint("SetTextI18n")
+            override fun onFinish() {
+                tv_answerHint.text = ""
+                tv_answerNumber.text = ""
+                tv_answer.text = ""
+                tv_zhuyin.text =""
+                iv_1.setImageResource(android.R.color.transparent)
+                iv_2.setImageResource(android.R.color.transparent)
+                iv_3.setImageResource(android.R.color.transparent)
+                iv_4.setImageResource(android.R.color.transparent)
+
+                //TODO toast does not work
+                Toast.makeText(this@MainActivity, "Game Over!", Toast.LENGTH_SHORT).show()
+
+                //TODO reset the game and add a play again option
+
+                if(currentScore > bestScore) {
+                    bestScore = currentScore
+                    tv_best.text = "BEST: $bestScore"
+
+                    val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
+                    val editor = sharedPref.edit()
+                    editor.putInt("bestScore", bestScore)
+                    editor.apply()
+                }
+            }
+        }.start()
+    }
+
+    //TODO create pause functionality, need to research timer pause
 }
