@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     //TODO return from database will give a list of objects
-    // Will create lists based on the returned images
+    // Will create lists based on the returned images, for now it is hard-coded
     private val vocab = arrayOf("蘋果", "香蕉", "檸檬", "橘子")
 
     private val apple = Word("蘋果", "ㄆㄧㄥˊ ㄍㄨㄛˇ", R.drawable.apple)
@@ -38,35 +38,17 @@ class MainActivity : AppCompatActivity() {
     private val vocabWord = arrayOf(apple, banana, lemon, orange)
 
     private val r = Random()
-    var answerObject = vocabWord[r.nextInt(vocabWord.size)]
-    var answer = answerObject.name
+    lateinit var answerObject: Word
+    lateinit var answer: String
     var answerArray = ArrayList<Word>()
     var currentScore = 0
-    var bestScore = 0
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
-        bestScore = sharedPref.getInt("bestScore", 0)
 
-        //Populate answer array with random words then set images based on array list
-        answerArray.add(answerObject)
-        answerArray.add(vocabWord[r.nextInt(vocabWord.size)])
-        answerArray.add(vocabWord[r.nextInt(vocabWord.size)])
-        answerArray.add(vocabWord[r.nextInt(vocabWord.size)])
-
-        iv_1.setImageResource(answerObject.img)
-        iv_2.setImageResource(answerArray[1].img)
-        iv_3.setImageResource(answerArray[2].img)
-        iv_4.setImageResource(answerArray[3].img)
-
-        tv_zhuyin.text = answerObject.zhuyin
-        tv_answerNumber.text = answer.length.toString()
-        tv_answerHint.text = makeVertical(answerObject.name)
-
-        tv_time.text = ("TIME: " + MILLISECONDS.toSeconds(15000))
-
+        initGame()
         setListeners()
         setButtonText()
         startTimer()
@@ -78,9 +60,29 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initGame() {
-        //TODO initialize the game, currently the game only starts onCreate
-        // if the player wants to play again, this must be implemented
+        //Initialize all views
+        //Populate answer array with random words then set images based on array list
+        currentScore = 0
+        answerObject = vocabWord[r.nextInt(vocabWord.size)]
+        answer = answerObject.name
+        answerArray.add(answerObject)
+        answerArray.add(vocabWord[r.nextInt(vocabWord.size)])
+        answerArray.add(vocabWord[r.nextInt(vocabWord.size)])
+        answerArray.add(vocabWord[r.nextInt(vocabWord.size)])
+
+        tv_zhuyin.text = answerObject.zhuyin
+        tv_answerNumber.text = answer.length.toString()
+        tv_answerHint.text = makeVertical(answerObject.name)
+
+        sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
+        tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
+
+        iv_1.setImageResource(answerObject.img)
+        iv_2.setImageResource(answerArray[1].img)
+        iv_3.setImageResource(answerArray[2].img)
+        iv_4.setImageResource(answerArray[3].img)
     }
 
     @SuppressLint("SetTextI18n")
@@ -138,6 +140,10 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onRestoreInstanceState: called")
         super.onRestoreInstanceState(savedInstanceState)
         //TODO potentially needs to restore et_answer value
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     private fun makeVertical(v: String): String {
@@ -230,12 +236,20 @@ class MainActivity : AppCompatActivity() {
                 iv_2.setImageResource(android.R.color.transparent)
                 iv_3.setImageResource(android.R.color.transparent)
                 iv_4.setImageResource(android.R.color.transparent)
+                b_1.text = ""
+                b_2.text = ""
+                b_3.text = ""
+                b_4.text = ""
+                b_5.text = ""
+                b_6.text = ""
+                b_7.text = ""
+                b_8.text = ""
 
                 //TODO toast does not work
                 Toast.makeText(this@MainActivity, "Game Over!", Toast.LENGTH_SHORT).show()
 
                 //TODO reset the game and add a play again option
-
+                var bestScore = sharedPref.getInt("bestScore", 0)
                 if(currentScore > bestScore) {
                     bestScore = currentScore
                     tv_best.text = "BEST: $bestScore"
