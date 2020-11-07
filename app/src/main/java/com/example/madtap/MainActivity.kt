@@ -1,21 +1,28 @@
 package com.example.madtap
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.transition.Slide
+import android.transition.TransitionManager.beginDelayedTransition
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.bottom_bar.*
-import kotlinx.android.synthetic.main.grid.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.button_grid.*
+import kotlinx.android.synthetic.main.image_grid.*
 import kotlinx.android.synthetic.main.middle_bar.*
 import kotlinx.android.synthetic.main.top_bar.*
 import java.util.*
@@ -48,10 +55,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initGame()
         setListeners()
-        setButtonText()
-        startTimer()
+        initGame()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -83,6 +88,9 @@ class MainActivity : AppCompatActivity() {
         iv_2.setImageResource(answerArray[1].img)
         iv_3.setImageResource(answerArray[2].img)
         iv_4.setImageResource(answerArray[3].img)
+
+        setButtonText()
+        startTimer()
     }
 
     @SuppressLint("SetTextI18n")
@@ -226,6 +234,7 @@ class MainActivity : AppCompatActivity() {
             override fun onTick(milliUntilFinished: Long) {
                 tv_time.text = "TIME: ${MILLISECONDS.toSeconds(milliUntilFinished)}"
             }
+            @RequiresApi(Build.VERSION_CODES.KITKAT)
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 tv_answerHint.text = ""
@@ -245,7 +254,7 @@ class MainActivity : AppCompatActivity() {
                 b_7.text = ""
                 b_8.text = ""
 
-                //TODO toast does not work
+                //TODO toast does not stand out
                 Toast.makeText(this@MainActivity, "Game Over!", Toast.LENGTH_SHORT).show()
 
                 //TODO reset the game and add a play again option
@@ -259,6 +268,59 @@ class MainActivity : AppCompatActivity() {
                     editor.putInt("bestScore", bestScore)
                     editor.apply()
                 }
+                //Creating popup window
+                val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                val popupView = inflater.inflate(R.layout.popup_window,null)
+                val popupWindow = PopupWindow(
+                    popupView,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                //Set an elevation for the popup window
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    popupWindow.elevation = 10.0F
+                }
+                //If API level 23 or higher then execute the code
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    //Create a new slide animation for popup window enter transition
+                    val slideIn = Slide()
+                    slideIn.slideEdge = Gravity.TOP
+                    popupWindow.enterTransition = slideIn
+
+                    //Slide animation for popup window exit transition
+                    val slideOut = Slide()
+                    slideOut.slideEdge = Gravity.RIGHT
+                    popupWindow.exitTransition = slideOut
+                }
+                val popupText = popupView.findViewById<TextView>(R.id.tv_gameOver)
+                popupText.text =
+                    """
+                            GAME OVER!
+                            Your Score: $currentScore
+                            High Score: $bestScore
+                    """
+
+                val popupPlay = popupView.findViewById<Button>(R.id.b_popup_play)
+                val popupQuit = popupView.findViewById<Button>(R.id.b_popup_quit)
+                popupPlay.setOnClickListener {
+                    initGame()
+                    popupWindow.dismiss()
+                }
+                popupQuit.setOnClickListener {
+                    //TODO quit to main menu
+                }
+                popupWindow.setOnDismissListener {
+                    //TODO replace with a countdown to the game
+                    Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
+                }
+
+                beginDelayedTransition(game_layout)
+                popupWindow.showAtLocation(
+                    game_layout,
+                    Gravity.CENTER,
+                    0,
+                    0
+                )
             }
         }.start()
     }

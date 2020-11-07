@@ -12,4 +12,5 @@
     <string name="restart">Restart</string>
     <string name="show_answers">Show Answers</string>
     <string name="practice_mode">Practice Mode</string>
+    <string name="play_again">Play Again</string>
 </resources>
