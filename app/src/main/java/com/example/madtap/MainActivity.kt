@@ -293,13 +293,7 @@ class MainActivity : AppCompatActivity() {
                     popupWindow.exitTransition = slideOut
                 }
                 val popupText = popupView.findViewById<TextView>(R.id.tv_gameOver)
-                popupText.text =
-                    """
-                            GAME OVER!
-                            Your Score: $currentScore
-                            High Score: $bestScore
-                    """
-
+                popupText.text = "GAME OVER!\nYour Score: $currentScore\nHigh Score: $bestScore"
                 val popupPlay = popupView.findViewById<Button>(R.id.b_popup_play)
                 val popupQuit = popupView.findViewById<Button>(R.id.b_popup_quit)
                 popupPlay.setOnClickListener {
