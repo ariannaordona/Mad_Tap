@@ -237,49 +237,17 @@ class MainActivity : AppCompatActivity() {
             @RequiresApi(Build.VERSION_CODES.KITKAT)
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
-                tv_answerHint.text = ""
-                tv_answerNumber.text = ""
-                tv_answer.text = ""
-                tv_zhuyin.text =""
-                iv_1.setImageResource(android.R.color.transparent)
-                iv_2.setImageResource(android.R.color.transparent)
-                iv_3.setImageResource(android.R.color.transparent)
-                iv_4.setImageResource(android.R.color.transparent)
-                b_1.text = ""
-                b_2.text = ""
-                b_3.text = ""
-                b_4.text = ""
-                b_5.text = ""
-                b_6.text = ""
-                b_7.text = ""
-                b_8.text = ""
-
-                //TODO toast does not stand out
-                Toast.makeText(this@MainActivity, "Game Over!", Toast.LENGTH_SHORT).show()
-
-                //TODO reset the game and add a play again option
-                var bestScore = sharedPref.getInt("bestScore", 0)
-                if(currentScore > bestScore) {
-                    bestScore = currentScore
-                    tv_best.text = "BEST: $bestScore"
-
-                    val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
-                    val editor = sharedPref.edit()
-                    editor.putInt("bestScore", bestScore)
-                    editor.apply()
-                }
+                clearViews()
+                val bestScore = sharedPref.getInt("bestScore", 0)
+                setBestScore(bestScore)
                 //Creating popup window
                 val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                 val popupView = inflater.inflate(R.layout.popup_window,null)
-                val popupWindow = PopupWindow(
-                    popupView,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
+                val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
                 //Set an elevation for the popup window
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    popupWindow.elevation = 10.0F
-                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { popupWindow.elevation = 10.0F }
+
                 //If API level 23 or higher then execute the code
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     //Create a new slide animation for popup window enter transition
@@ -307,17 +275,40 @@ class MainActivity : AppCompatActivity() {
                     //TODO replace with a countdown to the game
                     Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
                 }
-
                 beginDelayedTransition(game_layout)
-                popupWindow.showAtLocation(
-                    game_layout,
-                    Gravity.CENTER,
-                    0,
-                    0
-                )
+                popupWindow.showAtLocation(game_layout, Gravity.CENTER, 0, 0)
             }
         }.start()
     }
 
+    private fun clearViews() {
+        tv_answerHint.text = ""
+        tv_answerNumber.text = ""
+        tv_answer.text = ""
+        tv_zhuyin.text =""
+        iv_1.setImageResource(android.R.color.transparent)
+        iv_2.setImageResource(android.R.color.transparent)
+        iv_3.setImageResource(android.R.color.transparent)
+        iv_4.setImageResource(android.R.color.transparent)
+        b_1.text = ""
+        b_2.text = ""
+        b_3.text = ""
+        b_4.text = ""
+        b_5.text = ""
+        b_6.text = ""
+        b_7.text = ""
+        b_8.text = ""
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setBestScore(best: Int) {
+        if(currentScore > best) {
+            tv_best.text = "BEST: $best"
+            val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.putInt("bestScore", best)
+            editor.apply()
+        }
+    }
     //TODO create pause functionality, need to research timer pause
 }
