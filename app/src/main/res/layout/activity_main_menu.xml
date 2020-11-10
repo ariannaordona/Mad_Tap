@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mad_tap"
+        android:textSize="36sp"
+        android:paddingBottom="50dp"
+        android:layout_gravity="center"/>
+
+<!--traditional switch is not enabled since I only have traditional characters stored-->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/s_traditional"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:checked="true"
+        android:text="@string/traditional"
+        android:layout_gravity="center"
+        android:enabled="false"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/s_zhuyin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zhuyin"
+            android:enabled="true"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/s_pinyin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pinyin"
+            android:enabled="true"/>
+
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="50dp"
+        android:layout_gravity="center" />
+
+    <Button
+        android:id="@+id/b_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/start"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

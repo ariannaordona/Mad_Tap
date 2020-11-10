@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun initGame() {
         //Initialize all views
-        //Populate answer array with random words then set images based on array list
+        //Populate answer array with random words then set images based on array
         currentScore = 0
         answerObject = vocabWord[r.nextInt(vocabWord.size)]
         answer = answerObject.name
@@ -189,9 +189,7 @@ class MainActivity : AppCompatActivity() {
         b_clear.setOnClickListener {
             tv_answer.text = ""
         }
-        //textWatcher checks et_answer whenever the text is changed
-        // if the length of user input is the same length as the answer it will check if the user input is correct
-        // when answer is correct will call function correctAnswer and incorrectAnswer if incorrect
+        //When user answer length is equal to answer length call correctAnswer or incorrectAnswer accordingly
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}

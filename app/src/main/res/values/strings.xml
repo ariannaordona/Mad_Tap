@@ -13,4 +13,14 @@
     <string name="show_answers">Show Answers</string>
     <string name="practice_mode">Practice Mode</string>
     <string name="play_again">Play Again</string>
+    <string-array name="category_array">
+        <item>Fruit</item>
+        <item>Numbers</item>
+        <item>Money</item>
+        <item>Countries</item>
+        <item>Family</item>
+        <item>Locations</item>
+        <item>Colors</item>
+        <item>Food</item>
+    </string-array>
 </resources>
