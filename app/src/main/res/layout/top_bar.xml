@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
-        android:text="@string/time_15"
+        android:text="@string/time_50"
         android:textStyle="bold" />
 
     <TextView

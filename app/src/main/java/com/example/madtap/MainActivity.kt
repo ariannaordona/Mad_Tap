@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
     // Will create lists based on the returned images, for now it is hard-coded
     private val vocab = arrayOf("蘋果", "香蕉", "檸檬", "橘子")
 
-    private val apple = Word("蘋果", "ㄆㄧㄥˊ ㄍㄨㄛˇ", R.drawable.apple)
-    private val banana = Word("香蕉", "ㄒㄧㄤ ㄐㄧㄠ", R.drawable.banana)
-    private val lemon = Word("檸檬", "ㄋㄧㄥˊ ㄇㄥˊ", R.drawable.lemon)
-    private val orange = Word("橘子", "ㄐㄩˊ ㄗˇ",R.drawable.orange)
+    private val apple = Word("蘋果", "ㄆㄧㄥˊ ㄍㄨㄛˇ", "píng guǒ", R.drawable.apple)
+    private val banana = Word("香蕉", "ㄒㄧㄤ ㄐㄧㄠ", "xiāng jiāo", R.drawable.banana)
+    private val lemon = Word("檸檬", "ㄋㄧㄥˊ ㄇㄥˊ", "níng méng", R.drawable.lemon)
+    private val orange = Word("橘子", "ㄐㄩˊ ㄗˇ", "jú zǐ", R.drawable.orange)
 
     private val vocabWord = arrayOf(apple, banana, lemon, orange)
 
@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setListeners()
+        setSettings()
         initGame()
     }
 
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         answerArray.add(vocabWord[r.nextInt(vocabWord.size)])
 
         tv_zhuyin.text = answerObject.zhuyin
+        tv_pinyin.text = answerObject.pinyin
         tv_answerNumber.text = answer.length.toString()
         tv_answerHint.text = makeVertical(answerObject.name)
 
@@ -93,6 +95,29 @@ class MainActivity : AppCompatActivity() {
         startTimer()
     }
 
+    private fun setSettings() {
+        val intent = intent
+        val extras = intent.extras
+        if (extras != null) {
+            Log.d(TAG, "TRADTIONAL Key = ${extras.getBoolean("TRADITIONAL")}")
+        }
+        //Set visibilities if switches were checked in Main Menu
+        if (extras != null) {
+            if (extras.getBoolean("ZHUYIN")) {
+                tv_zhuyin.visibility = View.VISIBLE
+            } else {tv_zhuyin.visibility = View.INVISIBLE}
+        } else {Log.d(TAG, "ZHUYIN key is null")}
+        if (extras != null) {
+            if (extras.getBoolean("PINYIN")) {
+                tv_pinyin.visibility = View.VISIBLE
+            } else {tv_pinyin.visibility = View.INVISIBLE}
+        } else {Log.d(TAG, "PINYIN key is null")}
+
+        if (extras != null) {
+            Log.d(TAG, "CATEGORY Key = ${extras.getString("CATEGORY")}")
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun correctAnswer() {
         imageAnimation()
@@ -104,6 +129,7 @@ class MainActivity : AppCompatActivity() {
         answer = answerArray[0].name
         tv_answerNumber.text = answer.length.toString()
         tv_zhuyin.text = answerObject.zhuyin
+        tv_pinyin.text = answerObject.pinyin
         tv_answerHint.text = makeVertical(answerObject.name)
         iv_1.setImageResource(answerArray[0].img)
         iv_2.setImageResource(answerArray[1].img)
@@ -284,6 +310,8 @@ class MainActivity : AppCompatActivity() {
         tv_answerNumber.text = ""
         tv_answer.text = ""
         tv_zhuyin.text =""
+        tv_pinyin.text =""
+        tv_score.text = "SCORE: 0"
         iv_1.setImageResource(android.R.color.transparent)
         iv_2.setImageResource(android.R.color.transparent)
         iv_3.setImageResource(android.R.color.transparent)

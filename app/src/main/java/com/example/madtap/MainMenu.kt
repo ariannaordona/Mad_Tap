@@ -20,8 +20,7 @@ class MainMenu : AppCompatActivity() {
         val spinner = findViewById<Spinner>(R.id.spinner_category)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
         spinner.adapter = adapter
-
-        
+        //Spinner currently still has other categories that are not yet implemented (fruit is the only available category)
 
         b_start.setOnClickListener{
             Log.d(TAG, "Start Game Button Clicked")
