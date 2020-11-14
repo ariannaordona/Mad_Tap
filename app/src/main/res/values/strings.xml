@@ -13,6 +13,8 @@
     <string name="show_answers">Show Answers</string>
     <string name="practice_mode">Practice Mode</string>
     <string name="play_again">Play Again</string>
+    <string name="category">Category</string>
+    <string name="game_mode">Game Mode</string>
     <string-array name="category_array">
         <item>Fruit</item>
         <item>Numbers</item>
@@ -22,5 +24,10 @@
         <item>Locations</item>
         <item>Colors</item>
         <item>Food</item>
+    </string-array>
+    <string-array name="mode_array">
+        <item>Standard</item>
+        <item>Practice</item>
+        <item>Endless</item>
     </string-array>
 </resources>

@@ -17,10 +17,15 @@ class MainMenu : AppCompatActivity() {
         setContentView(R.layout.activity_main_menu)
 
         val categories = resources.getStringArray(R.array.category_array)
-        val spinner = findViewById<Spinner>(R.id.spinner_category)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
-        spinner.adapter = adapter
+        val spinnerCategory = findViewById<Spinner>(R.id.spinner_category)
+        val adapterCategory = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
+        spinnerCategory.adapter = adapterCategory
         //Spinner currently still has other categories that are not yet implemented (fruit is the only available category)
+
+        val modes = resources.getStringArray(R.array.mode_array)
+        val spinnerMode = findViewById<Spinner>(R.id.spinner_mode)
+        val adapterMode = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, modes)
+        spinnerMode.adapter = adapterMode
 
         b_start.setOnClickListener{
             Log.d(TAG, "Start Game Button Clicked")
@@ -30,6 +35,7 @@ class MainMenu : AppCompatActivity() {
             extras.putBoolean("ZHUYIN", s_zhuyin.isChecked)
             extras.putBoolean("PINYIN", s_pinyin.isChecked)
             extras.putString("CATEGORY", spinner_category.selectedItem.toString())
+            extras.putString("MODE", spinner_mode.selectedItem.toString())
             intent.putExtras(extras)
             startActivity(intent)
         }

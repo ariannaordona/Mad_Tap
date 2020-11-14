@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     var answerArray = ArrayList<Word>()
     var currentScore = 0
     private lateinit var sharedPref: SharedPreferences
+    lateinit var gameMode: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,18 +84,18 @@ class MainActivity : AppCompatActivity() {
         tv_answerNumber.text = answer.length.toString()
         tv_answerHint.text = makeVertical(answerObject.name)
 
-        sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
-        tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
-
         iv_1.setImageResource(answerObject.img)
         iv_2.setImageResource(answerArray[1].img)
         iv_3.setImageResource(answerArray[2].img)
         iv_4.setImageResource(answerArray[3].img)
 
         setButtonText()
-        startTimer()
+        if (gameMode == "standard") {
+            startTimer()
+        }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setSettings() {
         val intent = intent
         val extras = intent.extras
@@ -116,6 +117,26 @@ class MainActivity : AppCompatActivity() {
         if (extras != null) {
             Log.d(TAG, "CATEGORY Key = ${extras.getString("CATEGORY")}")
         }
+
+        if (extras != null) {
+            val mode = extras.getString("MODE")
+            when (mode) {
+                "Practice" -> {
+                    include1.visibility = View.INVISIBLE
+                    gameMode = "practice"
+                }
+                "Endless" -> {
+                    sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
+                    tv_best.text = "BEST: ${sharedPref.getInt("endlessBestScore", 0)}"
+                    gameMode = "endless"
+                }
+                else -> {
+                    sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
+                    tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
+                    gameMode = "standard"
+                }
+            }
+        } else {Log.d(TAG, "MODE key is null")}
     }
 
     @SuppressLint("SetTextI18n")
@@ -144,8 +165,15 @@ class MainActivity : AppCompatActivity() {
         //TODO HARD Mode (enabled toggle in menu) Shuffle the button text every time they answer
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun incorrectAnswer() {
         tv_answer.text = ""
+        if (gameMode == "endless") {
+            clearViews()
+            val endlessBestScore = sharedPref.getInt("endlessBestScore", 0)
+            setBestScore(endlessBestScore)
+            createPopUpWindow(endlessBestScore)
+        }
         //TODO add a red highlight flash or a red X on the image to give user feedback that their answer was not correct
     }
 
@@ -219,6 +247,7 @@ class MainActivity : AppCompatActivity() {
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            @RequiresApi(Build.VERSION_CODES.KITKAT)
             override fun afterTextChanged(p0: Editable?) {
                 val v = p0.toString()
                 if (v.length == answer.length) {
@@ -264,43 +293,8 @@ class MainActivity : AppCompatActivity() {
                 clearViews()
                 val bestScore = sharedPref.getInt("bestScore", 0)
                 setBestScore(bestScore)
-                //Creating popup window
-                val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                val popupView = inflater.inflate(R.layout.popup_window,null)
-                val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
-                //Set an elevation for the popup window
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { popupWindow.elevation = 10.0F }
-
-                //If API level 23 or higher then execute the code
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    //Create a new slide animation for popup window enter transition
-                    val slideIn = Slide()
-                    slideIn.slideEdge = Gravity.TOP
-                    popupWindow.enterTransition = slideIn
-
-                    //Slide animation for popup window exit transition
-                    val slideOut = Slide()
-                    slideOut.slideEdge = Gravity.RIGHT
-                    popupWindow.exitTransition = slideOut
-                }
-                val popupText = popupView.findViewById<TextView>(R.id.tv_gameOver)
-                popupText.text = "GAME OVER!\nYour Score: $currentScore\nHigh Score: $bestScore"
-                val popupPlay = popupView.findViewById<Button>(R.id.b_popup_play)
-                val popupQuit = popupView.findViewById<Button>(R.id.b_popup_quit)
-                popupPlay.setOnClickListener {
-                    initGame()
-                    popupWindow.dismiss()
-                }
-                popupQuit.setOnClickListener {
-                    //TODO quit to main menu
-                }
-                popupWindow.setOnDismissListener {
-                    //TODO replace with a countdown to the game
-                    Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
-                }
-                beginDelayedTransition(game_layout)
-                popupWindow.showAtLocation(game_layout, Gravity.CENTER, 0, 0)
+                createPopUpWindow(bestScore)
             }
         }.start()
     }
@@ -332,9 +326,57 @@ class MainActivity : AppCompatActivity() {
             tv_best.text = "BEST: $best"
             val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
             val editor = sharedPref.edit()
-            editor.putInt("bestScore", best)
-            editor.apply()
+            if (gameMode == "standard") {
+                editor.putInt("bestScore", best)
+                editor.apply()
+            } else if (gameMode == "endless") {
+                editor.putInt("endlessBestScore", best)
+                editor.apply()
+            }
         }
     }
+
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun createPopUpWindow(bestScore: Int) {
+        //Creating popup window
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView = inflater.inflate(R.layout.popup_window,null)
+        val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
+        //Set an elevation for the popup window
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { popupWindow.elevation = 10.0F }
+
+        //If API level 23 or higher then execute the code
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Create a new slide animation for popup window enter transition
+            val slideIn = Slide()
+            slideIn.slideEdge = Gravity.TOP
+            popupWindow.enterTransition = slideIn
+
+            //Slide animation for popup window exit transition
+            val slideOut = Slide()
+            slideOut.slideEdge = Gravity.RIGHT
+            popupWindow.exitTransition = slideOut
+        }
+        val popupText = popupView.findViewById<TextView>(R.id.tv_gameOver)
+        popupText.text = "GAME OVER!\nYour Score: $currentScore\nHigh Score: $bestScore"
+        val popupPlay = popupView.findViewById<Button>(R.id.b_popup_play)
+        val popupQuit = popupView.findViewById<Button>(R.id.b_popup_quit)
+        popupPlay.setOnClickListener {
+            initGame()
+            popupWindow.dismiss()
+        }
+        popupQuit.setOnClickListener {
+            //TODO quit to main menu
+        }
+        popupWindow.setOnDismissListener {
+            //TODO replace with a countdown to the game
+            Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
+        }
+        beginDelayedTransition(game_layout)
+        popupWindow.showAtLocation(game_layout, Gravity.CENTER, 0, 0)
+    }
+
     //TODO create pause functionality, need to research timer pause
 }
