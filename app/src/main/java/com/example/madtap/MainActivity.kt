@@ -91,7 +91,12 @@ class MainActivity : AppCompatActivity() {
 
         setButtonText()
         if (gameMode == "standard") {
+            sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
+            tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
             startTimer()
+        } else {
+            sharedPref = getSharedPreferences("PREFS_END", MODE_PRIVATE)
+            tv_best.text = "BEST: ${sharedPref.getInt("endlessBestScore", 0)}"
         }
     }
 
@@ -119,22 +124,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (extras != null) {
-            val mode = extras.getString("MODE")
-            when (mode) {
+            when (extras.getString("MODE")) {
                 "Practice" -> {
                     include1.visibility = View.INVISIBLE
                     gameMode = "practice"
                 }
                 "Endless" -> {
-                    sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
-                    tv_best.text = "BEST: ${sharedPref.getInt("endlessBestScore", 0)}"
                     gameMode = "endless"
+                    tv_time.text = "TIME: ∞"
                 }
-                else -> {
-                    sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
-                    tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
-                    gameMode = "standard"
-                }
+                else -> { gameMode = "standard" }
             }
         } else {Log.d(TAG, "MODE key is null")}
     }
@@ -170,9 +169,8 @@ class MainActivity : AppCompatActivity() {
         tv_answer.text = ""
         if (gameMode == "endless") {
             clearViews()
-            val endlessBestScore = sharedPref.getInt("endlessBestScore", 0)
-            setBestScore(endlessBestScore)
-            createPopUpWindow(endlessBestScore)
+            setBestScore(sharedPref.getInt("endlessBestScore", 0))
+            createPopUpWindow(sharedPref.getInt("endlessBestScore", 0))
         }
         //TODO add a red highlight flash or a red X on the image to give user feedback that their answer was not correct
     }
@@ -291,14 +289,13 @@ class MainActivity : AppCompatActivity() {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 clearViews()
-                val bestScore = sharedPref.getInt("bestScore", 0)
-                setBestScore(bestScore)
-
-                createPopUpWindow(bestScore)
+                setBestScore(sharedPref.getInt("bestScore", 0))
+                createPopUpWindow(sharedPref.getInt("bestScore", 0))
             }
         }.start()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun clearViews() {
         tv_answerHint.text = ""
         tv_answerNumber.text = ""
@@ -323,14 +320,16 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun setBestScore(best: Int) {
         if(currentScore > best) {
-            tv_best.text = "BEST: $best"
-            val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
-            val editor = sharedPref.edit()
+            tv_best.text = "BEST: $currentScore"
             if (gameMode == "standard") {
-                editor.putInt("bestScore", best)
+                val sharedPref: SharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.putInt("bestScore", currentScore)
                 editor.apply()
-            } else if (gameMode == "endless") {
-                editor.putInt("endlessBestScore", best)
+            } else {
+                val sharedPref: SharedPreferences = getSharedPreferences("PREFS_END", MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.putInt("endlessBestScore", currentScore)
                 editor.apply()
             }
         }
@@ -338,7 +337,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun createPopUpWindow(bestScore: Int) {
+    private fun createPopUpWindow(best: Int) {
         //Creating popup window
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.popup_window,null)
@@ -360,7 +359,7 @@ class MainActivity : AppCompatActivity() {
             popupWindow.exitTransition = slideOut
         }
         val popupText = popupView.findViewById<TextView>(R.id.tv_gameOver)
-        popupText.text = "GAME OVER!\nYour Score: $currentScore\nHigh Score: $bestScore"
+        popupText.text = "GAME OVER!\nYour Score: $currentScore\nHigh Score: $best"
         val popupPlay = popupView.findViewById<Button>(R.id.b_popup_play)
         val popupQuit = popupView.findViewById<Button>(R.id.b_popup_quit)
         popupPlay.setOnClickListener {
