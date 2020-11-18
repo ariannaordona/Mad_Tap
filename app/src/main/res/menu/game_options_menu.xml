@@ -9,13 +9,13 @@
         android:id="@+id/si_zhuyin"
         android:checkable="true"
         android:checked="true"
-        android:title="@string/zhuyin"
+        android:title="@string/show_zhuyin"
         app:actionLayout="@layout/switch_item" />
     <item
         android:id="@+id/si_pinyin"
         android:checkable="true"
         android:checked="false"
-        android:title="@string/pinyin"
+        android:title="@string/show_pinyin"
         app:actionLayout="@layout/switch_item" />
     <item
         android:id="@+id/si_answers"

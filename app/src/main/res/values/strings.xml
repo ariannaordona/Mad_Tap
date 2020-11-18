@@ -2,8 +2,6 @@
     <string name="app_name">Mad Tap</string>
     <string name="mad_tap">Mad Tap</string>
     <string name="start">Start</string>
-    <string name="zhuyin">Zhuyin</string>
-    <string name="pinyin">Pinyin</string>
     <string name="traditional">Traditional</string>
     <string name="time_50">TIME: 50</string>
     <string name="score_0">SCORE: 0</string>
@@ -15,6 +13,9 @@
     <string name="play_again">Play Again</string>
     <string name="category">Category</string>
     <string name="game_mode">Game Mode</string>
+    <string name="show_pinyin">Show Pinyin</string>
+    <string name="show_zhuyin">Show Zhuyin</string>
+    <string name="simplified">Simplified</string>
     <string-array name="category_array">
         <item>Fruit</item>
         <item>Numbers</item>

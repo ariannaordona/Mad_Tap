@@ -3,7 +3,9 @@ package com.example.madtap
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main_menu.*
@@ -16,6 +18,8 @@ class MainMenu : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_menu)
 
+        val ll = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
         val categories = resources.getStringArray(R.array.category_array)
         val spinnerCategory = findViewById<Spinner>(R.id.spinner_category)
         val adapterCategory = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
@@ -27,13 +31,31 @@ class MainMenu : AppCompatActivity() {
         val adapterMode = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, modes)
         spinnerMode.adapter = adapterMode
 
+        with(spinnerCategory)
+        {
+            adapter = adapterCategory
+            setSelection(0, false)
+            layoutParams = ll
+            prompt = "Select Category"
+            gravity = Gravity.CENTER
+        }
+
+        with(spinnerMode)
+        {
+            adapter = adapterMode
+            setSelection(0, false)
+            layoutParams = ll
+            prompt = "Select Game Mode"
+            gravity = Gravity.CENTER
+        }
+
         b_start.setOnClickListener{
             Log.d(TAG, "Start Game Button Clicked")
             val intent = Intent(this, MainActivity::class.java)
             val extras = Bundle()
-            extras.putBoolean("TRADITIONAL", s_traditional.isChecked)
-            extras.putBoolean("ZHUYIN", s_zhuyin.isChecked)
-            extras.putBoolean("PINYIN", s_pinyin.isChecked)
+            extras.putBoolean("TRADITIONAL", b_traditional.isChecked)
+            extras.putBoolean("ZHUYIN", b_zhuyin.isChecked)
+            extras.putBoolean("PINYIN", b_pinyin.isChecked)
             extras.putString("CATEGORY", spinner_category.selectedItem.toString())
             extras.putString("MODE", spinner_mode.selectedItem.toString())
             intent.putExtras(extras)
