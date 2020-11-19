@@ -27,7 +27,7 @@
         android:id="@+id/include3"
         layout="@layout/middle_bar"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="50dp"
         android:layout_above="@+id/include4"
         android:layout_centerHorizontal="true"/>
 

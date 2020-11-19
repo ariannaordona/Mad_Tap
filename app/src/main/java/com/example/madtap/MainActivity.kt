@@ -104,26 +104,17 @@ class MainActivity : AppCompatActivity() {
     private fun setSettings() {
         val intent = intent
         val extras = intent.extras
+
         if (extras != null) {
             Log.d(TAG, "TRADTIONAL Key = ${extras.getBoolean("TRADITIONAL")}")
-        }
-        //Set visibilities if switches were checked in Main Menu
-        if (extras != null) {
+            Log.d(TAG, "CATEGORY Key = ${extras.getString("CATEGORY")}")
             if (extras.getBoolean("ZHUYIN")) {
                 tv_zhuyin.visibility = View.VISIBLE
             } else {tv_zhuyin.visibility = View.INVISIBLE}
-        } else {Log.d(TAG, "ZHUYIN key is null")}
-        if (extras != null) {
             if (extras.getBoolean("PINYIN")) {
                 tv_pinyin.visibility = View.VISIBLE
             } else {tv_pinyin.visibility = View.INVISIBLE}
-        } else {Log.d(TAG, "PINYIN key is null")}
 
-        if (extras != null) {
-            Log.d(TAG, "CATEGORY Key = ${extras.getString("CATEGORY")}")
-        }
-
-        if (extras != null) {
             when (extras.getString("MODE")) {
                 "Practice" -> {
                     include1.visibility = View.INVISIBLE
@@ -135,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> { gameMode = "standard" }
             }
-        } else {Log.d(TAG, "MODE key is null")}
+        }
     }
 
     @SuppressLint("SetTextI18n")

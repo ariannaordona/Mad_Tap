@@ -59,21 +59,19 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <RadioButton
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/b_zhuyin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/show_zhuyin"
-            android:layout_marginEnd="10dp"
-            android:onClick="radio_button_click"/>
+            android:layout_marginEnd="10dp" />
 
-        <RadioButton
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/b_pinyin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/show_pinyin"
-            android:layout_marginStart="10dp"
-            android:onClick="radio_button_click" />
+            android:layout_marginStart="10dp"/>
 
     </LinearLayout>
 
