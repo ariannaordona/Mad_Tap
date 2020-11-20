@@ -157,6 +157,8 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun incorrectAnswer() {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.incorrect)
+        iv_1.startAnimation(animation)
         tv_answer.text = ""
         if (gameMode == "endless") {
             clearViews()
