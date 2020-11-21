@@ -15,7 +15,6 @@ import android.transition.TransitionManager.beginDelayedTransition
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.*
@@ -64,12 +63,6 @@ class MainActivity : AppCompatActivity() {
         setListeners()
         setSettings()
         initGame()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.game_options_menu, menu)
-        return true
     }
 
     @SuppressLint("SetTextI18n")
@@ -377,7 +370,7 @@ class MainActivity : AppCompatActivity() {
         val popupText = popupView.findViewById<TextView>(R.id.tv_gameOver)
         popupText.text = "GAME OVER!\nYour Score: $currentScore\nHigh Score: $best"
         val popupPlay = popupView.findViewById<Button>(R.id.b_popup_play)
-        val popupQuit = popupView.findViewById<Button>(R.id.b_popup_quit)
+        val popupQuit = popupView.findViewById<Button>(R.id.b_popup_end_quit)
         popupPlay.setOnClickListener {
             initGame()
             popupWindow.dismiss()
@@ -417,6 +410,7 @@ class MainActivity : AppCompatActivity() {
         }
         val popupContinue = popupView.findViewById<Button>(R.id.b_popup_continue)
         val popupRestart = popupView.findViewById<Button>(R.id.b_popup_restart)
+        val popupQuit = popupView.findViewById<Button>(R.id.b_popup_pause_quit)
         val popupZhuyin = popupView.findViewById<SwitchCompat>(R.id.b_popup_zhuyin)
         val popupPinyin = popupView.findViewById<SwitchCompat>(R.id.b_popup_pinyin)
         if (tv_zhuyin.visibility == View.VISIBLE) {popupZhuyin.isChecked = true}
@@ -443,6 +437,11 @@ class MainActivity : AppCompatActivity() {
             initGame()
             popupWindow.dismiss()
         }
+        popupQuit.setOnClickListener {
+            val intent = Intent(this, MainMenu::class.java)
+            startActivity(intent)
+        }
+
         popupWindow.setOnDismissListener {
             //TODO replace with a countdown to the game
             Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
