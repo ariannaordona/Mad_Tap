@@ -16,6 +16,7 @@
     <string name="show_pinyin">Show Pinyin</string>
     <string name="show_zhuyin">Show Zhuyin</string>
     <string name="simplified">Simplified</string>
+    <string name="popup_continue">Continue</string>
     <string-array name="category_array">
         <item>Fruit</item>
         <item>Numbers</item>

@@ -37,6 +37,7 @@
             android:gravity="center"
             android:text="@string/simplified"
             android:enabled="false"
+            android:textSize="20sp"
             android:textColor="@color/white" />
 
         <RadioButton
@@ -50,6 +51,7 @@
             android:text="@string/traditional"
             android:enabled="true"
             android:checked="true"
+            android:textSize="20sp"
             android:textColor="@color/white" />
     </RadioGroup>
 
@@ -101,17 +103,13 @@
 
     </LinearLayout>
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
+    <Button
         android:id="@+id/b_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/start"
-        app:bootstrapBrand="success"
-        app:bootstrapSize="lg"
-        app:buttonMode="regular"
-        app:showOutline="false"
-        app:roundedCorners="true"
+        android:background="@drawable/custom_rounded_corners"
         android:layout_gravity="center" />
 
 </LinearLayout>
