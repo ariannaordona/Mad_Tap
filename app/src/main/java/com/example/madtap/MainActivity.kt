@@ -455,7 +455,9 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun pause() {
-        val timeLeft = (Integer.parseInt(tv_time.text.takeLast(2).toString()) * 1000)
+        var timeLeftChar = tv_time.text.takeLast(2).toString()
+        timeLeftChar = timeLeftChar.replace("\\s".toRegex(), "")
+        val timeLeft = (Integer.parseInt(timeLeftChar) * 1000)
         timer.cancel()
         disableListeners()
         createPausePopUpWindow(timeLeft.toLong())
