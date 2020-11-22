@@ -88,6 +88,7 @@
             android:textSize="30sp"
             android:textStyle="bold"
             android:gravity="fill_vertical" />
+
     </RelativeLayout>
 
 </LinearLayout>

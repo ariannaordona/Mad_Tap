@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        iv_pause.setImageResource(R.drawable.pause_button)
         setSettings()
         initGame()
     }
@@ -92,6 +91,7 @@ class MainActivity : AppCompatActivity() {
         if (gameMode == "standard") {
             sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
             tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
+            iv_pause.setImageResource(R.drawable.pause_button)
             startTimer(50000)
         } else {
             sharedPref = getSharedPreferences("PREFS_END", MODE_PRIVATE)
@@ -237,24 +237,31 @@ class MainActivity : AppCompatActivity() {
         }
         //When user answer length is equal to answer length call correctAnswer or incorrectAnswer accordingly
         val textWatcher = object : TextWatcher {
+            var isOnTextChanged = false
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { isOnTextChanged = true}
             @RequiresApi(Build.VERSION_CODES.KITKAT)
             override fun afterTextChanged(p0: Editable?) {
-                val v = p0.toString()
-                if (v.length == answer.length) {
-                    if (v == answer) {correctAnswer()}
-                    else {
-                        tv_answer.text = ""
-                        incorrectAnswer()
+                if (isOnTextChanged) {
+                    isOnTextChanged = false
+                    val v = p0.toString()
+                    if (v.length == answer.length) {
+                        if (v == answer) {correctAnswer()}
+                        else {
+                            tv_answer.text = ""
+                            incorrectAnswer()
+                        }
                     }
                 }
+
             }
         }
         tv_answer.addTextChangedListener(textWatcher)
 
-        iv_pause.setOnClickListener {
-            pause()
+        if(gameMode == "standard") {
+            iv_pause.setOnClickListener {
+                pause()
+            }
         }
     }
 
