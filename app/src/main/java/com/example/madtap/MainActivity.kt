@@ -60,11 +60,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         iv_pause.setImageResource(R.drawable.pause_button)
-        setListeners()
         setSettings()
         initGame()
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     private fun initGame() {
         //Initialize all views
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         iv_3.setImageResource(answerArray[2].img)
         iv_4.setImageResource(answerArray[3].img)
 
-
+        setListeners()
         setButtonText()
         if (gameMode == "standard") {
             sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
@@ -130,6 +130,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun correctAnswer() {
+        Log.d(TAG, "correctAnswer called")
         imageAnimation()
         tv_answer.text = ""
         answerArray.removeAt(0)
@@ -156,6 +157,7 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun incorrectAnswer() {
+        Log.d(TAG, "incorrectAnswer called")
         val animation = AnimationUtils.loadAnimation(this, R.anim.incorrect)
         iv_1.startAnimation(animation)
         tv_answer.text = ""
@@ -266,7 +268,6 @@ class MainActivity : AppCompatActivity() {
         b_7.setOnClickListener(null)
         b_8.setOnClickListener(null)
         b_clear.setOnClickListener(null)
-
         iv_pause.setOnClickListener(null)
     }
 
@@ -351,17 +352,15 @@ class MainActivity : AppCompatActivity() {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.popup_window_end,null)
         val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
+        disableListeners()
         //Set an elevation for the popup window
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { popupWindow.elevation = 10.0F }
-
         //If API level 23 or higher then execute the code
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //Create a new slide animation for popup window enter transition
             val slideIn = Slide()
             slideIn.slideEdge = Gravity.TOP
             popupWindow.enterTransition = slideIn
-
             //Slide animation for popup window exit transition
             val slideOut = Slide()
             slideOut.slideEdge = Gravity.RIGHT
@@ -372,6 +371,7 @@ class MainActivity : AppCompatActivity() {
         val popupPlay = popupView.findViewById<Button>(R.id.b_popup_play)
         val popupQuit = popupView.findViewById<Button>(R.id.b_popup_end_quit)
         popupPlay.setOnClickListener {
+            clearArray()
             initGame()
             popupWindow.dismiss()
         }
@@ -392,17 +392,14 @@ class MainActivity : AppCompatActivity() {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.popup_window_pause,null)
         val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
         //Set an elevation for the popup window
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { popupWindow.elevation = 10.0F }
-
         //If API level 23 or higher then execute the code
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //Create a new slide animation for popup window enter transition
             val slideIn = Slide()
             slideIn.slideEdge = Gravity.TOP
             popupWindow.enterTransition = slideIn
-
             //Slide animation for popup window exit transition
             val slideOut = Slide()
             slideOut.slideEdge = Gravity.RIGHT
@@ -433,7 +430,7 @@ class MainActivity : AppCompatActivity() {
             if (popupPinyin.isChecked) {
                 tv_pinyin.visibility = View.VISIBLE
             } else {tv_pinyin.visibility = View.INVISIBLE}
-            setListeners()
+            clearArray()
             initGame()
             popupWindow.dismiss()
         }
@@ -441,7 +438,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MainMenu::class.java)
             startActivity(intent)
         }
-
         popupWindow.setOnDismissListener {
             //TODO replace with a countdown to the game
             Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
@@ -454,7 +450,14 @@ class MainActivity : AppCompatActivity() {
     private fun pause() {
         val timeLeft = (Integer.parseInt(tv_time.text.takeLast(2).toString()) * 1000)
         timer.cancel()
-        createPausePopUpWindow(timeLeft.toLong())
         disableListeners()
+        createPausePopUpWindow(timeLeft.toLong())
+    }
+
+    private fun clearArray() {
+        answerArray.removeAt(0)
+        answerArray.removeAt(0)
+        answerArray.removeAt(0)
+        answerArray.removeAt(0)
     }
 }
