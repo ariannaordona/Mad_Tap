@@ -1,6 +1,5 @@
 package com.example.madtap
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -16,6 +15,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
-    @SuppressLint("SetTextI18n")
     private fun initGame() {
         //Initialize all views
         //Populate answer array with random words then set images based on array
@@ -86,20 +85,20 @@ class MainActivity : AppCompatActivity() {
         iv_3.setImageResource(answerArray[2].img)
         iv_4.setImageResource(answerArray[3].img)
 
-        setListeners()
+        tv_time.text = "TIME: 50"
+        tv_answer.text = ""
         setButtonText()
         if (gameMode == "standard") {
             sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
             tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
             iv_pause.setImageResource(R.drawable.pause_button)
-            startTimer(50000)
+            startTimer(54000)
         } else {
             sharedPref = getSharedPreferences("PREFS_END", MODE_PRIVATE)
             tv_best.text = "BEST: ${sharedPref.getInt("endlessBestScore", 0)}"
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun setSettings() {
         val intent = intent
         val extras = intent.extras
@@ -128,7 +127,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun correctAnswer() {
         Log.d(TAG, "correctAnswer called")
         imageAnimation()
@@ -186,13 +184,11 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         Log.d(TAG, "onSaveInstanceState: called")
         super.onSaveInstanceState(outState, outPersistentState)
-        // TODO potentially needs to save et_answer value
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         Log.d(TAG, "onRestoreInstanceState: called")
         super.onRestoreInstanceState(savedInstanceState)
-        //TODO potentially needs to restore et_answer value
     }
 
     override fun onDestroy() {
@@ -222,7 +218,6 @@ class MainActivity : AppCompatActivity() {
             val b = v as Button
             tv_answer.append(b.text)
         }
-
         b_1.setOnClickListener(listener)
         b_2.setOnClickListener(listener)
         b_3.setOnClickListener(listener)
@@ -231,7 +226,6 @@ class MainActivity : AppCompatActivity() {
         b_6.setOnClickListener(listener)
         b_7.setOnClickListener(listener)
         b_8.setOnClickListener(listener)
-
         b_clear.setOnClickListener {
             tv_answer.text = ""
         }
@@ -298,13 +292,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startTimer(t: Long) {
+        var start = true
         timer = object : CountDownTimer(t, 1000) {
-            @SuppressLint("SetTextI18n")
+            @RequiresApi(Build.VERSION_CODES.KITKAT)
             override fun onTick(milliUntilFinished: Long) {
-                tv_time.text = "TIME: ${MILLISECONDS.toSeconds(milliUntilFinished)}"
+                val timeSeconds = MILLISECONDS.toSeconds(milliUntilFinished).toInt()
+                if(start) {
+                    when {
+                        timeSeconds >= 53 -> {countdown(3)}
+                        timeSeconds in 52..52 -> {countdown(2)}
+                        timeSeconds in 51..51 -> { countdown(1) }
+                        timeSeconds in 50..50 -> {
+                            setListeners()
+                            start = false
+                        }
+                        else -> {start = false}
+                    }
+                } else {tv_time.text = "TIME: $timeSeconds"}
             }
             @RequiresApi(Build.VERSION_CODES.KITKAT)
-            @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 clearViews()
                 setBestScore(sharedPref.getInt("bestScore", 0))
@@ -313,7 +319,6 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    @SuppressLint("SetTextI18n")
     private fun clearViews() {
         tv_answerHint.text = ""
         tv_answerNumber.text = ""
@@ -335,7 +340,6 @@ class MainActivity : AppCompatActivity() {
         b_8.text = ""
     }
 
-    @SuppressLint("SetTextI18n")
     private fun setBestScore(best: Int) {
         if(currentScore > best) {
             tv_best.text = "BEST: $currentScore"
@@ -353,7 +357,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun createEndPopUpWindow(best: Int) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -385,10 +388,6 @@ class MainActivity : AppCompatActivity() {
         popupQuit.setOnClickListener {
             val intent = Intent(this, MainMenu::class.java)
             startActivity(intent)
-        }
-        popupWindow.setOnDismissListener {
-            //TODO replace with a countdown to the game
-            Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
         }
         beginDelayedTransition(game_layout)
         popupWindow.showAtLocation(game_layout, Gravity.CENTER, 0, 0)
@@ -445,10 +444,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MainMenu::class.java)
             startActivity(intent)
         }
-        popupWindow.setOnDismissListener {
-            //TODO replace with a countdown to the game
-            Toast.makeText(applicationContext,"Popup closed",Toast.LENGTH_SHORT).show()
-        }
         beginDelayedTransition(game_layout)
         popupWindow.showAtLocation(game_layout, Gravity.CENTER, 0, 0)
     }
@@ -468,5 +463,25 @@ class MainActivity : AppCompatActivity() {
         answerArray.removeAt(0)
         answerArray.removeAt(0)
         answerArray.removeAt(0)
+    }
+
+    private fun countdown(imageBlock: Int) {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.game_countdown,null)
+        val popup = PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val animation = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+        val imageCountdown = view.findViewById<ImageView>(R.id.iv_countdown)
+        when (imageBlock) {
+            3 -> imageCountdown.setImageResource(R.drawable.number_block_3)
+            2 -> imageCountdown.setImageResource(R.drawable.number_block_2)
+            1 -> imageCountdown.setImageResource(R.drawable.number_block_1)
+        }
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(p0: Animation?) { popup.dismiss() }
+        })
+        popup.showAtLocation(game_layout, Gravity.CENTER, 0, 0)
+        imageCountdown.startAnimation(animation)
     }
 }
