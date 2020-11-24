@@ -140,11 +140,6 @@ class MainActivity : AppCompatActivity() {
         tv_zhuyin.text = answerObject.zhuyin
         tv_pinyin.text = answerObject.pinyin
         tv_answerHint.text = makeVertical(answerObject.name)
-        iv_1.setImageResource(answerArray[0].img)
-        iv_2.setImageResource(answerArray[1].img)
-        iv_3.setImageResource(answerArray[2].img)
-        iv_4.setImageResource(answerArray[3].img)
-
         currentScore++
         tv_score.text = "SCORE: $currentScore"
 
@@ -205,11 +200,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun imageAnimation() {
-        val animation = AnimationUtils.loadAnimation(this, R.anim.slide)
-        iv_1.startAnimation(animation)
-        iv_2.startAnimation(animation)
-        iv_3.startAnimation(animation)
-        iv_4.startAnimation(animation)
+        val animation1 = AnimationUtils.loadAnimation(this, R.anim.slide)
+        val animation2 = AnimationUtils.loadAnimation(this, R.anim.slide)
+        val animation3 = AnimationUtils.loadAnimation(this, R.anim.slide)
+        val animation4 = AnimationUtils.loadAnimation(this, R.anim.slide)
+        animation1.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(p0: Animation?) { iv_1.setImageResource(answerArray[0].img) }
+        })
+        animation2.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(p0: Animation?) { iv_2.setImageResource(answerArray[1].img) }
+        })
+        animation3.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(p0: Animation?) { iv_3.setImageResource(answerArray[2].img) }
+        })
+        animation4.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationRepeat(p0: Animation?) {}
+            override fun onAnimationEnd(p0: Animation?) { iv_4.setImageResource(answerArray[3].img) }
+        })
+        iv_1.startAnimation(animation1)
+        iv_2.startAnimation(animation2)
+        iv_3.startAnimation(animation3)
+        iv_4.startAnimation(animation4)
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
