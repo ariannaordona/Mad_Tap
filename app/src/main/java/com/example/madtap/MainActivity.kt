@@ -85,10 +85,10 @@ class MainActivity : AppCompatActivity() {
         iv_3.setImageResource(answerArray[2].img)
         iv_4.setImageResource(answerArray[3].img)
 
-        tv_time.text = "TIME: 50"
         tv_answer.text = ""
         setButtonText()
         if (gameMode == "standard") {
+            tv_time.text = "TIME: 50"
             sharedPref = getSharedPreferences("PREFS", MODE_PRIVATE)
             tv_best.text = "BEST: ${sharedPref.getInt("bestScore", 0)}"
             iv_pause.setImageResource(R.drawable.pause_button)
@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             sharedPref = getSharedPreferences("PREFS_END", MODE_PRIVATE)
             tv_best.text = "BEST: ${sharedPref.getInt("endlessBestScore", 0)}"
+            setListeners()
         }
     }
 
@@ -119,10 +120,14 @@ class MainActivity : AppCompatActivity() {
                     gameMode = "practice"
                 }
                 "Endless" -> {
+                    tv_answerHint.visibility = View.INVISIBLE
                     gameMode = "endless"
                     tv_time.text = "TIME: ∞"
                 }
-                else -> { gameMode = "standard" }
+                else -> {
+                    tv_answerHint.visibility = View.INVISIBLE
+                    gameMode = "standard"
+                }
             }
         }
     }
@@ -142,8 +147,6 @@ class MainActivity : AppCompatActivity() {
         tv_answerHint.text = makeVertical(answerObject.name)
         currentScore++
         tv_score.text = "SCORE: $currentScore"
-
-        //TODO add a green highlight flash to show user that it is correct or play a sound
 
         //TODO HARD Mode (enabled toggle in menu) Shuffle the button text every time they answer
     }
@@ -184,10 +187,6 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         Log.d(TAG, "onRestoreInstanceState: called")
         super.onRestoreInstanceState(savedInstanceState)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     private fun makeVertical(v: String): String {
@@ -470,7 +469,7 @@ class MainActivity : AppCompatActivity() {
     private fun pause() {
         var timeLeftChar = tv_time.text.takeLast(2).toString()
         timeLeftChar = timeLeftChar.replace("\\s".toRegex(), "")
-        val timeLeft = (Integer.parseInt(timeLeftChar) * 1000)
+        val timeLeft = ((Integer.parseInt(timeLeftChar) * 1000) + 100)
         timer.cancel()
         disableListeners()
         createPausePopUpWindow(timeLeft.toLong())
