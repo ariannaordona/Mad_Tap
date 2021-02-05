@@ -21,13 +21,13 @@ LAYOUT
 
 ====================================
 
-RULES
-- infinite mode -> keeps going and going until you die
-- add a time limit to challenge player
-- can disable time limit just for practicing
-- get more points for continuous correct answers
-- when getting correct -> play audio file (DEFINITELY CAN GET ANNOYING -> MUST BE ABLE TO DISABLE)
-- Traditional / Simplified
+RULES (4 modes)
+- Standard: Get as many correct answers within a time limit
+- Hard: Time limit and layout of character buttons is shuffled after every correct answer
+- Practice: No time limit and the answer is shown on the left side
+- Endless: No time limit, but the first wrong answer will end the game
+
+- Traditional / Simplified (Personally I would rather only learn Traditional, not a high priority to implement a simplified option)
 - Characters that need more than one to mean something (ie. basketball can be represented as a basketball, but would need more than 1 character). On the interface the card with the basketball image would have a (2) underneath the image showing you need 2 characters
 
 ====================================
@@ -49,27 +49,16 @@ Category
 INTERFACE
 - Button > Start
 - Drop down menu > Category
-- Input > # of words
+- Input > # of words (WIP)
 - Radio button > Traditional/Symplified
-- Radio button > Audio
+- Radio button > Audio (No audio implemented currently)
 - Button > Start
-
-=== Randomize images in category ====
-- Continually show images (keep looping/repeating words)
-- Stack of images in the middle of the screen
- - Player taps 3x3 set of buttons filled with the characters that create the words that represent the images
-- If player gets it wrong
- - screen pops a big X on screen
- - pauses the game for 1 second
-- If player gets it right
- - images go down
- - screen pops large image of correct symbol onto screen 
- - Score updates
 
 ======================================================================
 
 WHAT IS IMPLEMENTED
 - Basic working tapping game where there is a list of hard coded characters that are randomly put into the buttons 
-- Set of images are hardcoded and saved into the drawable folder
-- Upon inputting the correct characters, a quick animation of the next image moves downward
-- A random image is chosen into the list, the answer is already shown on the right side of the image (will be implemented as showing answer toggle for a practice mode)
+- Images are all in the drawable folder, database will store the location
+- Upon inputting the correct characters, a quick animation of the next image moves downward, if incorrect quick animation of the image shakes
+- All 4 modes are implemented
+- A random image is chosen into the list
