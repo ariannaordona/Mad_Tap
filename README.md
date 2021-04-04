@@ -2,7 +2,31 @@
 
 This is a personal project made to increase my set of vocabulary for learning Mandarin. 
 
-![app explanation image](game_interface_explanation.jpg)
+![mad_tap](https://user-images.githubusercontent.com/32204716/113523833-4101c980-955f-11eb-8f43-ae8e76caf4c5.gif)
+
+Using Duolingo can be fast and fun very quickly. But they do not use traditional characters and do not teach anything of the phonetic alphabet of Zhuyin. If you want to type/text in mandarin, you will have to use the phonetic alphabet to type and search for the character you want to input. In addition, when reading a book you will often run into characters you do not recognize and most books will have the phonetic spelling on the side, letting the reader search the word in a dictionary using the phonetic spelling to search.
+
+This app is meant to help me learn mandarin and increase my memorization with traditional characters and their phonetic spellings.
+
+![pause](https://user-images.githubusercontent.com/32204716/113523825-2e879000-955f-11eb-9c24-a265da0122e3.gif)
+
+**Standard Mode**
+- Time limit of a minute with a countdown at the start
+- Player can pause the game at any time and change settings to show or not show zhuyin and pinyin
+- Can pause to restart or quit to main menu
+
+![endless](https://user-images.githubusercontent.com/32204716/113523817-19aafc80-955f-11eb-890a-f4c9bd45ae01.gif)
+
+**Endless Mode**
+- No time limit
+- Game over when the player enters a wrong answer
+
+![practice](https://user-images.githubusercontent.com/32204716/113523820-24659180-955f-11eb-937f-8c456d307a4d.gif)
+
+**Practice Mode**
+- No time limit
+- Answers are shown on the right side
+- No score is recorded
 
 MANDARIN MATCH (WIP)
 
